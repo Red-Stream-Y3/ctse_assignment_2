@@ -19,9 +19,11 @@ This is an assignment project made for the CTSE module.
 7. POST /content/:id/comments: Add a new comment to content by ID.
 8. PUT /content/:id/comments/:commentId: Update comment for content by ID and comment ID.
 9. DELETE /content/:id/comments/:commentId: Delete comment for content by ID and comment ID.
-10. GET /content/tags/:tag: Get content by tag.
-11. GET /content/search: Search content by keyword.
-12. GET /content/:id/analytics: Get analytics for content by ID.
+10. PUT /content/:id/like: Like content by ID.
+11. PUT /content/:id/unlike: Unlike content by ID.
+12. GET /content/tags/:tag: Get content by tag.
+13. GET /content/search: Search content by keyword.
+14. GET /content/:id/analytics: Get analytics for content by ID.
 
 ### Categories
 
