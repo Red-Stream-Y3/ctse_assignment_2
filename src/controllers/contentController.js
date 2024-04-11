@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import Content from "../models/contentModel";
+import Content from "../models/contentModel.js";
 
 // @desc    Get all content
 // @route   GET /content
