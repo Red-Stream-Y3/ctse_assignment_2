@@ -4,8 +4,9 @@ services:
     blog_service:
         build: .
         ports:
-            - ${PORT}:3000
+            - ${PORT}:${PORT}
         restart: always
+        command: npm start
         environment:
             - PORT=${PORT}
             - MONGO_URI=${MONGO_URI}
