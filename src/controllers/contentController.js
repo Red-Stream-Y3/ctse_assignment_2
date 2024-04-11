@@ -154,6 +154,38 @@ const deleteComment = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Like content by id
+// @route   PUT /content/:id/like
+// @access  Public
+
+const likeContent = asyncHandler(async (req, res) => {
+  const contentToUpdate = await Content.findById(req.params.id);
+  if (contentToUpdate) {
+    contentToUpdate.likes += 1;
+    const updatedContent = await contentToUpdate.save();
+    res.json(updatedContent.likes);
+  } else {
+    res.status(404);
+    throw new Error("Content not found");
+  }
+});
+
+// @desc    Unlike content by id
+// @route   PUT /content/:id/unlike
+// @access  Public
+
+const unlikeContent = asyncHandler(async (req, res) => {
+  const contentToUpdate = await Content.findById(req.params.id);
+  if (contentToUpdate) {
+    contentToUpdate.likes -= 1;
+    const updatedContent = await contentToUpdate.save();
+    res.json(updatedContent.likes);
+  } else {
+    res.status(404);
+    throw new Error("Content not found");
+  }
+});
+
 // @desc    Get content by tag
 // @route   GET /content/tags/:tag
 // @access  Public
@@ -281,6 +313,8 @@ export {
   addComment,
   updateComment,
   deleteComment,
+  likeContent,
+  unlikeContent,
   getContentByTag,
   getCategories,
   createCategory,

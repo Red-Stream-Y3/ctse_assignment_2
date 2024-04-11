@@ -9,6 +9,8 @@ import {
   addComment,
   updateComment,
   deleteComment,
+  likeContent,
+  unlikeContent,
   getContentByTag,
   getCategories,
   createCategory,
@@ -32,6 +34,8 @@ router
   .route("/:id/comments/:commentId")
   .put(updateComment)
   .delete(deleteComment);
+router.route("/:id/like").put(likeContent);
+router.route("/:id/unlike").put(unlikeContent);
 router.route("/tag/:tag").get(getContentByTag);
 router.route("/categories").get(getCategories).post(createCategory);
 router.route("/categories/:id").put(updateCategory).delete(deleteCategory);
