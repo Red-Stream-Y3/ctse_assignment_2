@@ -10,26 +10,26 @@ This is an assignment project made for the CTSE module.
 
 ### Content
 
-GET /content: Get all content.
-GET /content/:id: Get content by ID.
-POST /content: Create new content.
-PUT /content/:id: Update content by ID.
-DELETE /content/:id: Delete content by ID.
-GET /content/:id/comments: Get comments for content by ID.
-POST /content/:id/comments: Add a new comment to content by ID.
-PUT /content/:id/comments/:commentId: Update comment for content by ID and comment ID.
-DELETE /content/:id/comments/:commentId: Delete comment for content by ID and comment ID.
-GET /content/tags/:tag: Get content by tag.
-GET /content/search: Search content by keyword.
-GET /content/:id/analytics: Get analytics for content by ID.
+1. GET /content: Get all content.
+2. GET /content/:id: Get content by ID.
+3. POST /content: Create new content.
+4. PUT /content/:id: Update content by ID.
+5. DELETE /content/:id: Delete content by ID.
+6. GET /content/:id/comments: Get comments for content by ID.
+7. POST /content/:id/comments: Add a new comment to content by ID.
+8. PUT /content/:id/comments/:commentId: Update comment for content by ID and comment ID.
+9. DELETE /content/:id/comments/:commentId: Delete comment for content by ID and comment ID.
+10. GET /content/tags/:tag: Get content by tag.
+11. GET /content/search: Search content by keyword.
+12. GET /content/:id/analytics: Get analytics for content by ID.
 
 ### Categories
 
-GET /categories: Get all categories.
-POST /categories: Create a new category.
-PUT /categories/:id: Update category by ID.
-DELETE /categories/:id: Delete category by ID.
+1. GET /categories: Get all categories.
+2. POST /categories: Create a new category.
+3. PUT /categories/:id: Update category by ID.
+4. DELETE /categories/:id: Delete category by ID.
 
 ### Analytics
 
-GET /analytics: Get overall analytics.
+1. GET /analytics: Get overall analytics.
