@@ -4,12 +4,10 @@ services:
     blog_service:
         build: .
         ports:
-            - ${port}:3000
+            - ${PORT}:3000
         restart: always
         environment:
-            - PORT=${port}
-            - MONGO_URI=${mongo_uri}
-            - MONGO_DB=${mongo_db}
-            - MONGO_USER=${mongo_user}
-            - MONGO_PASSWORD=${mongo_password}
-            - JWT_SECRET=${jwt_secret}
+            - PORT=${PORT}
+            - MONGO_URI=${MONGO_URI}
+            - MONGO_PASSWORD=${MONGO_PASSWORD}
+            - JWT_SECRET=${JWT_SECRET}
