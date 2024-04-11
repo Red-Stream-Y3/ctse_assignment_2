@@ -46,6 +46,7 @@ const contentSchema = new mongoose.Schema(
     },
     likes: {
       type: Number,
+      default: 0,
     },
   },
   {
@@ -54,3 +55,5 @@ const contentSchema = new mongoose.Schema(
 );
 
 const Content = mongoose.model("Content", contentSchema);
+
+export default Content;
