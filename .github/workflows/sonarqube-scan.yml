@@ -1,32 +1,32 @@
-name: SonarCloud Analysis
+# name: SonarCloud Analysis
 
-on:
-  pull_request:
-    types: [opened, synchronize]
-  push:
-    branches:
-      - main
+# on:
+#   pull_request:
+#     types: [opened, synchronize]
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  sonarcloud:
-    runs-on: ubuntu-latest
+# jobs:
+#   sonarcloud:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: "14.x"
 
-      - name: Install dependencies
-        run: npm install
+#       - name: Install dependencies
+#         run: npm install
 
-      - name: Analyze code with SonarCloud
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          organization: ${{ secrets.SONAR_ORGANIZATION }}
-          projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
+#       - name: Analyze code with SonarCloud
+#         uses: sonarsource/sonarcloud-github-action@master
+#         env:
+#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#         with:
+#           organization: ${{ secrets.SONAR_ORGANIZATION }}
+#           projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
