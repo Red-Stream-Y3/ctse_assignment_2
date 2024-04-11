@@ -1,15 +1,24 @@
 {
-  "name": "ctse_assignment_2",
-  "version": "1.0.0",
-  "description": "university assignment",
-  "main": "index.js",
-  "repository": "https://github.com/Red-Stream-Y3/ctse_assignment_2.git",
-  "author": "Redstream",
-  "license": "MIT",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "mongoose": "^8.3.1",
-    "nodemon": "^3.1.0"
-  }
+    "name": "ctse_assignment_2",
+    "version": "1.0.0",
+    "description": "university assignment",
+    "main": "index.js",
+    "repository": "https://github.com/Red-Stream-Y3/ctse_assignment_2.git",
+    "author": "Redstream",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "start": "nodemon index.js"
+    },
+    "dependencies": {
+        "axios": "^1.6.8",
+        "colors": "^1.4.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "express-async-handler": "^1.2.0",
+        "find-config": "^1.0.0",
+        "mongoose": "^8.3.1",
+        "nodemon": "^3.1.0"
+    }
 }
