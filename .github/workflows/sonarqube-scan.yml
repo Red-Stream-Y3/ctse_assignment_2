@@ -25,7 +25,5 @@ jobs:
 
       - name: Analyze code with SonarCloud
         uses: sonarsource/sonarcloud-github-action@master
-        with:
-          organization: ${{ secrets.SONAR_ORGANIZATION }}
-          token: ${{ secrets.SONAR_TOKEN }}
-          projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
