@@ -1,14 +1,14 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:654654619629:task-definition/blog-app-task-definition:1",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:654654619629:task-definition/content-app-task-definition:1",
     "containerDefinitions": [
         {
-            "name": "blog-app",
-            "image": "654654619629.dkr.ecr.us-east-1.amazonaws.com/blog-app:latest",
-            "cpu": 1024,
+            "name": "content-app",
+            "image": "654654619629.dkr.ecr.us-east-1.amazonaws.com/content-app:latest",
+            "cpu": 0,
             "memory": 1024,
             "portMappings": [
                 {
-                    "name": "blog-app-3000-tcp",
+                    "name": "content-app-3000-tcp",
                     "containerPort": 3000,
                     "hostPort": 3000,
                     "protocol": "tcp",
@@ -25,30 +25,36 @@
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/blog-app-task-definition",
+                    "awslogs-group": "/ecs/content-app-task-definition",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
                 },
                 "secretOptions": []
             },
-            "systemControls": [],
-            "resourceRequirements": [
-                {
-                    "value": "1",
-                    "type": "GPU"
-                }
-            ]
+            "healthCheck": {
+                "command": [
+                    "CMD-SHELL",
+                    "curl -f http://localhost:3000/health || exit 1"
+                ],
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3
+            },
+            "systemControls": []
         }
     ],
-    "family": "blog-app-task-definition",
-    "taskRoleArn": "arn:aws:iam::654654619629:role/ecsTaskExecutionRole",
+    "family": "content-app-task-definition",
     "executionRoleArn": "arn:aws:iam::654654619629:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
     "revision": 1,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
         {
             "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.24"
         },
         {
             "name": "ecs.capability.execution-role-awslogs"
@@ -60,7 +66,7 @@
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
         },
         {
-            "name": "com.amazonaws.ecs.capability.task-iam-role"
+            "name": "ecs.capability.container-health-check"
         },
         {
             "name": "ecs.capability.execution-role-ecr-pull"
@@ -69,23 +75,27 @@
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
         },
         {
+            "name": "ecs.capability.task-eni"
+        },
+        {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
         }
     ],
     "placementConstraints": [],
     "compatibilities": [
-        "EC2"
+        "EC2",
+        "FARGATE"
     ],
     "requiresCompatibilities": [
-        "EC2"
+        "FARGATE"
     ],
     "cpu": "1024",
-    "memory": "1024",
+    "memory": "2048",
     "runtimePlatform": {
-        "cpuArchitecture": "X86_64",
+        "cpuArchitecture": "ARM64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-04-12T13:39:25.623Z",
+    "registeredAt": "2024-04-12T15:36:44.242Z",
     "registeredBy": "arn:aws:iam::654654619629:root",
     "tags": []
 }
