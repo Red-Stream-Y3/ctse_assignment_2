@@ -32,9 +32,6 @@ jobs:
                   file: ./Dockerfile
                   push: true
                   tags: ${{ secrets.DOCKER_HUB_USERNAME }}/blog:latest
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
             - name: AWS SSM Send-Command
               uses: peterkimzz/aws-ssm-send-command@v1.1.1
               with:
