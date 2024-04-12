@@ -42,5 +42,5 @@ jobs:
                       cd /home/ec2-user/blog/ctse_assignment_2
                       docker-compose down
                       git pull origin prod
-                      docker-compose up
+                      docker-compose up --build --detach
                       docker image prune -af
