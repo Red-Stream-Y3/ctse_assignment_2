@@ -1,4 +1,4 @@
-name: CICD
+name: AWS ECS Deployment CI/CD
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ github.sha }}
           REPOSITORY: content-app
         run: |
           # Build a docker container and
@@ -40,7 +40,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: blog-app-task-definition.json 
+          task-definition: content-app-task-definition.json 
           container-name: content-app
           image: ${{ steps.build-image.outputs.image }}    
       - name: Deploy Amazon ECS task definition
@@ -49,4 +49,4 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: content-app-service
           cluster: DevCluster
-          wait-for-service-stability: true    
+          wait-for-service-stability: true 
