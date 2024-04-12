@@ -23,6 +23,11 @@ app.use(bodyParser.json({ extended: true }));
 app.use('/api/v1/content', contentRoutes);
 app.use('/api/v1/category', categoryRoutes);
 
+// langing message for API
+app.get('/', (req, res) => {
+    res.send('Welcome to Redstream Blog API');
+});
+
 // app.use(notFound);
 // app.use(errorHandler);
 
