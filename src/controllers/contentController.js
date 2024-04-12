@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import Content from "../models/contentModel";
+import Content from "../models/contentModel.js";
 
 // @desc    Get all content
 // @route   GET /content
@@ -19,8 +19,7 @@ const getContentById = asyncHandler(async (req, res) => {
   if (content) {
     res.json(content);
   } else {
-    res.status(404);
-    throw new Error("Content not found");
+    res.status(404).json({ error: "Content not found" });
   }
 });
 
@@ -55,8 +54,7 @@ const updateContent = asyncHandler(async (req, res) => {
     const updatedContent = await contentToUpdate.save();
     res.json(updatedContent);
   } else {
-    res.status(404);
-    throw new Error("Content not found");
+    res.status(404).json({ error: "Content not found" });
   }
 });
 
@@ -70,8 +68,7 @@ const deleteContent = asyncHandler(async (req, res) => {
     await contentToDelete.remove();
     res.json({ message: "Content removed" });
   } else {
-    res.status(404);
-    throw new Error("Content not found");
+    res.status(404).json({ error: "Content not found" });
   }
 });
 
@@ -84,8 +81,7 @@ const getComments = asyncHandler(async (req, res) => {
   if (content) {
     res.json(content.comments);
   } else {
-    res.status(404);
-    throw new Error("Content not found");
+    res.status(404).json({ error: "Content not found" });
   }
 });
 
@@ -105,8 +101,7 @@ const addComment = asyncHandler(async (req, res) => {
     const updatedContent = await contentToUpdate.save();
     res.status(201).json(updatedContent.comments);
   } else {
-    res.status(404);
-    throw new Error("Content not found");
+    res.status(404).json({ error: "Content not found" });
   }
 });
 
@@ -127,12 +122,10 @@ const updateComment = asyncHandler(async (req, res) => {
       const updatedContent = await contentToUpdate.save();
       res.json(updatedContent.comments);
     } else {
-      res.status(404);
-      throw new Error("Comment not found");
+      res.status(404).json({ error: "Comment not found" });
     }
   } else {
-    res.status(404);
-    throw new Error("Content not found");
+    res.status(404).json({ error: "Content not found" });
   }
 });
 
@@ -149,8 +142,37 @@ const deleteComment = asyncHandler(async (req, res) => {
     const updatedContent = await contentToUpdate.save();
     res.json(updatedContent.comments);
   } else {
-    res.status(404);
-    throw new Error("Content not found");
+    res.status(404).json({ error: "Content not found" });
+  }
+});
+
+// @desc    Like content by id
+// @route   PUT /content/:id/like
+// @access  Public
+
+const likeContent = asyncHandler(async (req, res) => {
+  const contentToUpdate = await Content.findById(req.params.id);
+  if (contentToUpdate) {
+    contentToUpdate.likes += 1;
+    const updatedContent = await contentToUpdate.save();
+    res.json(updatedContent.likes);
+  } else {
+    res.status(404).json({ error: "Content not found" });
+  }
+});
+
+// @desc    Unlike content by id
+// @route   PUT /content/:id/unlike
+// @access  Public
+
+const unlikeContent = asyncHandler(async (req, res) => {
+  const contentToUpdate = await Content.findById(req.params.id);
+  if (contentToUpdate) {
+    contentToUpdate.likes -= 1;
+    const updatedContent = await contentToUpdate.save();
+    res.json(updatedContent.likes);
+  } else {
+    res.status(404).json({ error: "Content not found" });
   }
 });
 
@@ -161,60 +183,6 @@ const deleteComment = asyncHandler(async (req, res) => {
 const getContentByTag = asyncHandler(async (req, res) => {
   const contents = await Content.find({ "tags.name": req.params.tag });
   res.json(contents);
-});
-
-// @desc    Get all categories
-// @route   GET /categories
-// @access  Public
-
-const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Content.distinct("tags.name");
-  res.json(categories);
-});
-
-// @desc    Create a new category
-// @route   POST /categories
-// @access  Public
-
-const createCategory = asyncHandler(async (req, res) => {
-  const { name } = req.body;
-  const content = new Content({
-    tags: [{ name }],
-  });
-  const createdContent = await content.save();
-  res.status(201).json(createdContent.tags[0]);
-});
-
-// @desc    Update category by id
-// @route   PUT /categories/:id
-// @access  Public
-
-const updateCategory = asyncHandler(async (req, res) => {
-  const { name } = req.body;
-  const contentToUpdate = await Content.findOne({ "tags._id": req.params.id });
-  if (contentToUpdate) {
-    contentToUpdate.tags[0].name = name;
-    const updatedContent = await contentToUpdate.save();
-    res.json(updatedContent.tags[0]);
-  } else {
-    res.status(404);
-    throw new Error("Category not found");
-  }
-});
-
-// @desc    Delete category by id
-// @route   DELETE /categories/:id
-// @access  Public
-
-const deleteCategory = asyncHandler(async (req, res) => {
-  const contentToUpdate = await Content.findOne({ "tags._id": req.params.id });
-  if (contentToUpdate) {
-    await contentToUpdate.remove();
-    res.json({ message: "Category removed" });
-  } else {
-    res.status(404);
-    throw new Error("Category not found");
-  }
 });
 
 // @desc    Search content by keyword
@@ -247,8 +215,7 @@ const getAnalytics = asyncHandler(async (req, res) => {
     };
     res.json(analytics);
   } else {
-    res.status(404);
-    throw new Error("Content not found");
+    res.status(404).json({ error: "Content not found" });
   }
 });
 
@@ -281,11 +248,9 @@ export {
   addComment,
   updateComment,
   deleteComment,
+  likeContent,
+  unlikeContent,
   getContentByTag,
-  getCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
   searchContent,
   getAnalytics,
   getOverallAnalytics,

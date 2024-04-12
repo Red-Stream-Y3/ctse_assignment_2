@@ -1,40 +1,43 @@
-# ctse_assignment_2
+# Content Management API
 
-A microservice for content management service for a bloggoing website
+This API provides endpoints to manage content, including CRUD operations for content and comments, as well as analytics and category management.
 
-## endpoints
+## Description
 
-##### Content Creation:
+This is an assignment project made for the CTSE module.
 
-1. POST /content: Create a new content item.
-2. PUT /content/{id}: Update an existing content item.
-3. DELETE /content/{id}: Delete a content item.
+## Endpoints
 
-##### Content Retrieval:
+### Content
 
-1. GET /content: Retrieve a list of content items.
-2. GET /content/{id}: Retrieve details of a specific content item by ID.
+1. GET /content: Get all content.
+2. GET /content/:id: Get content by ID.
+3. POST /content: Create new content.
+4. PUT /content/:id: Update content by ID.
+5. DELETE /content/:id: Delete content by ID.
+6. GET /content/:id/comments: Get comments for content by ID.
+7. POST /content/:id/comments: Add a new comment to content by ID.
+8. PUT /content/:id/comments/:commentId: Update comment for content by ID and comment ID.
+9. DELETE /content/:id/comments/:commentId: Delete comment for content by ID and comment ID.
+10. PUT /content/:id/like: Like content by ID.
+11. PUT /content/:id/unlike: Unlike content by ID.
+12. GET /content/tags/:tag: Get content by tag.
+13. GET /content/search: Search content by keyword.
+14. GET /content/:id/analytics: Get analytics for content by ID.
 
-##### Content Categorization:
+### Categories
 
-1. GET /categories: Retrieve a list of available categories.
+1. GET /categories: Get all categories.
 2. POST /categories: Create a new category.
-3. PUT /categories/{id}: Update an existing category.
-4. DELETE /categories/{id}: Delete a category.
+3. PUT /categories/:id: Update category by ID.
+4. DELETE /categories/:id: Delete category by ID.
 
-##### Content Search:
+### Analytics
 
-1. GET /content/search: Search for content items based on keywords or other criteria.
-2. GET /content/tags/{tag}: Retrieve content items with a specific tag.
+1. GET /analytics: Get overall analytics.
 
-##### Content Comments and Interactions:
+# Jenkins admin user
 
-1. GET /content/{id}/comments: Retrieve comments for a specific content item.
-2. POST /content/{id}/comments: Add a new comment to a content item.
-3. PUT /content/{id}/comments/{commentId}: Update an existing comment.
-4. DELETE /content/{id}/comments/{commentId}: Delete a comment.
-
-##### Content Analytics:
-
-1. GET /content/{id}/analytics: Retrieve analytics data for a specific content item.
-2. GET /analytics: Retrieve overall analytics data for the entire content management system.
+username - admin
+password - admin123
+http://ec2-13-53-197-74.eu-north-1.compute.amazonaws.com:8080/

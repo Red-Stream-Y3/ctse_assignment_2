@@ -1,4 +1,4 @@
-FROM Node:alpine
+FROM node:alpine
 
 WORKDIR /app
 
@@ -8,3 +8,5 @@ RUN yarn install
 COPY . .
 
 EXPOSE 3000
+
+CMD ["node", "index.js"]
