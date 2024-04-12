@@ -16,13 +16,6 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
-const tagsSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-});
-
 const contentSchema = new mongoose.Schema(
   {
     title: {
@@ -38,8 +31,8 @@ const contentSchema = new mongoose.Schema(
       required: true,
     },
     tags: {
-      type: [tagsSchema],
-      required: true,
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Tag",
     },
     comments: {
       type: [commentSchema],
