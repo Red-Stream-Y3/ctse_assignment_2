@@ -32,23 +32,14 @@ jobs:
                   file: ./Dockerfile
                   push: true
                   tags: ${{ secrets.DOCKER_HUB_USERNAME }}/blog:latest
-            - name: AWS SSM Send-Command
-              uses: peterkimzz/aws-ssm-send-command@v1.1.1
+            - name: Deploy to AWS EC2 with SSH
+              uses: appleboy/ssh-action@master
               with:
-                  # AWS access key id
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  # AWS secret access key
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: ${{ secrets.AWS_REGION }}
-                  # AWS EC2 Instance id
-                  instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
-                  # Command execution location
-                  working-directory: /blog/ctse_assignment_2
-                  command: |
-                      sudo docker-compose stop
-                      sudo docker-compose rm -f
+                  host: ${{ secrets.AWS_HOST_NAME }}
+                  username: ec2-user
+                  key: ${{ secrets.AWS_KEY }}
+                  script: |
+                      cd /home/ubuntu/blog/ctse_assignment_2
                       sudo git pull origin prod
-                      sudo docker-compose up -build
+                      sudo docker-compose up -d --build
                       sudo docker image prune -af
-                  # Comment for Send-Command
-                  comment: 'Deploying the latest version of the app'
