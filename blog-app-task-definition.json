@@ -1,14 +1,14 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:654654619629:task-definition/ctse-app-task-definition:3",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:654654619629:task-definition/blog-app-task-definition:1",
     "containerDefinitions": [
         {
-            "name": "ctse-app",
-            "image": "654654619629.dkr.ecr.us-east-1.amazonaws.com/ctse:latest",
-            "cpu": 0,
+            "name": "blog-app",
+            "image": "654654619629.dkr.ecr.us-east-1.amazonaws.com/blog-app:latest",
+            "cpu": 1024,
             "memory": 1024,
             "portMappings": [
                 {
-                    "name": "ctse-app-3000-tcp",
+                    "name": "blog-app-3000-tcp",
                     "containerPort": 3000,
                     "hostPort": 3000,
                     "protocol": "tcp",
@@ -25,20 +25,25 @@
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/ctse-app-task-definition",
+                    "awslogs-group": "/ecs/blog-app-task-definition",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
                 },
                 "secretOptions": []
             },
-            "systemControls": []
+            "systemControls": [],
+            "resourceRequirements": [
+                {
+                    "value": "1",
+                    "type": "GPU"
+                }
+            ]
         }
     ],
-    "family": "ctse-app-task-definition",
+    "family": "blog-app-task-definition",
     "taskRoleArn": "arn:aws:iam::654654619629:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::654654619629:role/ecsTaskExecutionRole",
-    "networkMode": "bridge",
-    "revision": 3,
+    "revision": 1,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -80,7 +85,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-04-12T11:20:00.293Z",
+    "registeredAt": "2024-04-12T13:39:25.623Z",
     "registeredBy": "arn:aws:iam::654654619629:root",
     "tags": []
 }
