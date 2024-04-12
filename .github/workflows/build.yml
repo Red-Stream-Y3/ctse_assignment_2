@@ -10,7 +10,7 @@ on:
 jobs:
     docker:
         name: Docker Build and Push
-        runs-on: ubuntu-latest
+        runs-on: linux
 
         steps:
             - name: Checkout
@@ -43,12 +43,12 @@ jobs:
                   # AWS EC2 Instance id
                   instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
                   # Command execution location
-                  working-directory: /home/ubuntu
+                  working-directory: /blog/ctse_assignment_2
                   command: |
                       sudo docker-compose stop
                       sudo docker-compose rm -f
-                      sudo docker-compose pull
-                      sudo docker-compose up -d
+                      sudo git pull origin prod
+                      sudo docker-compose up -build
                       sudo docker image prune -af
                   # Comment for Send-Command
                   comment: 'Deploying the latest version of the app'
