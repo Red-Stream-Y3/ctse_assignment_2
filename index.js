@@ -4,6 +4,12 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import findConfig from "find-config";
 import colors from "colors";
+import connectDB from "./src/configs/db.js";
+import contentRoutes from "./src/routes/contentRoutes.js";
+
+connectDB();
+
+dotenv.config({ path: findConfig(".env.product") });
 
 if (process.env.NODE_ENV !== "production") {
   dotenv.config({ path: findConfig(".env.dev") });
@@ -14,11 +20,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json({ extended: true }));
 
-// app.use('/api/v1/users', userRoutes);
-// app.use('/api/v1/products', productRoutes);
-// app.use('/api/v1/orders', orderRoutes);
-// app.use('/api/v1/carts', cartRoutes);
-// app.use('/api/v1/vision', visionSearchRoutes);
+app.use("/api/v1/contents", contentRoutes);
 
 const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== "test") {
