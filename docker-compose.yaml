@@ -9,4 +9,4 @@ services:
         command: npm start
         environment:
             - PORT=${PORT}
-            - MONGODB_URI=${MONGO_URI}
+            - MONGO_URI=${MONGO_URI}
