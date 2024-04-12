@@ -1,11 +1,10 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:654654619629:task-definition/content-app-task-definition:1",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:654654619629:task-definition/content-app-task-definition:3",
     "containerDefinitions": [
         {
             "name": "content-app",
-            "image": "654654619629.dkr.ecr.us-east-1.amazonaws.com/content-app:latest",
+            "image": "654654619629.dkr.ecr.us-east-1.amazonaws.com/content-app",
             "cpu": 0,
-            "memory": 1024,
             "portMappings": [
                 {
                     "name": "content-app-3000-tcp",
@@ -31,30 +30,19 @@
                 },
                 "secretOptions": []
             },
-            "healthCheck": {
-                "command": [
-                    "CMD-SHELL",
-                    "curl -f http://localhost:3000/health || exit 1"
-                ],
-                "interval": 30,
-                "timeout": 5,
-                "retries": 3
-            },
             "systemControls": []
         }
     ],
     "family": "content-app-task-definition",
+    "taskRoleArn": "arn:aws:iam::654654619629:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::654654619629:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 3,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
         {
             "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.24"
         },
         {
             "name": "ecs.capability.execution-role-awslogs"
@@ -66,7 +54,7 @@
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
         },
         {
-            "name": "ecs.capability.container-health-check"
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
         },
         {
             "name": "ecs.capability.execution-role-ecr-pull"
@@ -92,10 +80,10 @@
     "cpu": "1024",
     "memory": "2048",
     "runtimePlatform": {
-        "cpuArchitecture": "ARM64",
+        "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-04-12T15:36:44.242Z",
+    "registeredAt": "2024-04-12T16:48:13.872Z",
     "registeredBy": "arn:aws:iam::654654619629:root",
     "tags": []
 }
