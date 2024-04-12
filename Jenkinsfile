@@ -1,10 +1,10 @@
 pipeline {
-    agent { dockerfile true }
+    agent: any
     stages {
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
                 echo 'Building..'
-                sh 'docker compose up'
+                sh 'docker-compose up --build'
             }
         }
     }
