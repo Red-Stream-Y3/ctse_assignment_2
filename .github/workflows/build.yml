@@ -10,7 +10,7 @@ on:
 jobs:
     docker:
         name: Docker Build and Push
-        runs-on: linux
+        runs-on: ubuntu-latest
 
         steps:
             - name: Checkout
