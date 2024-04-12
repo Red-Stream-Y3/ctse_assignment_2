@@ -11,6 +11,7 @@ jobs:
     docker:
         name: Docker Build and Push
         runs-on: ubuntu-latest
+        environment: prod
 
         steps:
             - name: Checkout
