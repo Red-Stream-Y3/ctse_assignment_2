@@ -1,10 +1,10 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:654654619629:task-definition/ctse-app-task-definition:1",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:654654619629:task-definition/ctse-app-task-definition:3",
     "containerDefinitions": [
         {
             "name": "ctse-app",
             "image": "654654619629.dkr.ecr.us-east-1.amazonaws.com/ctse:latest",
-            "cpu": 1024,
+            "cpu": 0,
             "memory": 1024,
             "portMappings": [
                 {
@@ -35,8 +35,10 @@
         }
     ],
     "family": "ctse-app-task-definition",
+    "taskRoleArn": "arn:aws:iam::654654619629:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::654654619629:role/ecsTaskExecutionRole",
-    "revision": 1,
+    "networkMode": "bridge",
+    "revision": 3,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -51,6 +53,9 @@
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
         },
         {
             "name": "ecs.capability.execution-role-ecr-pull"
@@ -70,12 +75,12 @@
         "EC2"
     ],
     "cpu": "1024",
-    "memory": "3072",
+    "memory": "1024",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-04-12T08:13:11.300Z",
+    "registeredAt": "2024-04-12T11:20:00.293Z",
     "registeredBy": "arn:aws:iam::654654619629:root",
     "tags": []
 }
