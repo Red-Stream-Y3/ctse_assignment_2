@@ -40,7 +40,7 @@ jobs:
                   key: ${{ secrets.AWS_KEY }}
                   script: |
                       cd /home/ec2-user/blog/ctse_assignment_2
-                      sudo git config pull.rebase false
-                      sudo git pull origin/prod
+                      sudo git pull origin
+                      sudo git checkout prod
                       sudo docker compose up -d --build
                       sudo docker image prune -af
