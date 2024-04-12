@@ -40,7 +40,7 @@ jobs:
                   key: ${{ secrets.AWS_KEY }}
                   script: |
                       cd /home/ec2-user/blog/ctse_assignment_2
+                      sudo docker-compose down
                       sudo git pull origin prod
-                      sudo git checkout prod
-                      sudo docker compose up
+                      sudo docker-compose up
                       sudo docker image prune -af
