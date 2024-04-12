@@ -35,3 +35,9 @@ This is an assignment project made for the CTSE module.
 ### Analytics
 
 1. GET /analytics: Get overall analytics.
+
+# Jenkins admin user
+
+username - admin
+password - admin123
+http://ec2-13-53-197-74.eu-north-1.compute.amazonaws.com:8080/
