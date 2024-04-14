@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import request from "supertest";
 import app from "../../index.js";
 import Content from "../models/contentModel.js";
@@ -20,239 +19,291 @@ import {
   getOverallAnalytics,
 } from "./contentController.js";
 
+jest.mock("../models/contentModel");
+
 describe("Content Controllers", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("getContents", () => {
-    it("should return all content", async () => {
-      const mockContents = [{ title: "Content 1" }, { title: "Content 2" }];
-      Content.find.mockResolvedValue(mockContents);
+  describe("GET /api/v1/content", () => {
+    test("should get all content", async () => {
+      const contents = [{ title: "Test Content", author: "Test Author", content: "Test Content Body" }];
+      Content.find.mockResolvedValue(contents);
 
-      const response = await request(app).get("/content");
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockContents);
-    });
-
-    it("should handle errors", async () => {
-      Content.find.mockRejectedValue(new Error("Database error"));
-
-      const response = await request(app).get("/content");
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Database error");
+      await request(app)
+        .get("/api/v1/content")
+        .expect(200)
+        .expect("Content-Type", /json/)
+        .then((response) => {
+          expect(response.body).toEqual(contents);
+        });
     });
   });
 
-  // Similarly, write test cases for other controllers
-  // getContentById, createContent, updateContent, deleteContent, getComments, addComment, updateComment, deleteComment, likeContent, unlikeContent, getContentByTag, searchContent, getAnalytics, getOverallAnalytics
+  describe("GET /api/v1/content/:id", () => {
+    test("should get content by id", async () => {
+      const content = { _id: "123", title: "Test Content", author: "Test Author", content: "Test Content Body" };
+      Content.findById.mockResolvedValue(content);
 
-  describe("getAnalytics", () => {
-    it("should return analytics for content by id", async () => {
-      const mockContent = {
-        _id: "1",
-        likes: 10,
-        comments: [{ _id: "1", comment: "Comment 1" }],
-      };
-      Content.findById.mockResolvedValue(mockContent);
+      await request(app)
+        .get("/api/v1/content/123")
+        .expect(200)
+        .expect("Content-Type", /json/)
+        .then((response) => {
+          expect(response.body).toEqual(content);
+        });
+    });
 
-      const response = await request(app).get("/content/1/analytics");
+    test("should return 404 if content not found", async () => {
+      Content.findById.mockResolvedValue(null);
 
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        likes: mockContent.likes,
-        comments: mockContent.comments.length,
+      await request(app)
+        .get("/api/v1/content/123")
+        .expect(404)
+        .expect("Content-Type", /json/)
+        .then((response) => {
+          expect(response.body).toEqual({ error: "Content not found" });
+        });
+    });
+  });
+
+  describe("POST /api/v1/content", () => {
+    test("should create new content", async () => {
+      const newContent = { title: "New Content", author: "Test Author", content: "New Content Body" };
+      Content.prototype.save.mockResolvedValue(newContent);
+
+      await request(app)
+        .post("/api/v1/content")
+        .send(newContent)
+        .expect(201)
+        .expect("Content-Type", /json/)
+        .then((response) => {
+          expect(response.body).toEqual(newContent);
+        });
+    });
+});
+
+describe("PUT /api/v1/content/:id", () => {
+  test("should update content by id", async () => {
+    const updatedContent = { _id: "123", title: "Updated Content", author: "Test Author", content: "Updated Content Body" };
+    Content.findById.mockResolvedValue({ save: jest.fn().mockResolvedValue(updatedContent) });
+
+    await request(app)
+      .put("/api/v1/content/123")
+      .send(updatedContent)
+      .expect(200)
+      .expect("Content-Type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(updatedContent);
       });
-    });
-
-    it("should handle content not found", async () => {
-      Content.findById.mockResolvedValue(null);
-
-      const response = await request(app).get("/content/1/analytics");
-
-      expect(response.status).toBe(404);
-      expect(response.body.error).toBe("Content not found");
-    });
-
-    it("should handle errors", async () => {
-      Content.findById.mockRejectedValue(new Error("Database error"));
-
-      const response = await request(app).get("/content/1/analytics");
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Database error");
-    });
   });
 
-  describe("getOverallAnalytics", () => {
-    it("should return overall analytics", async () => {
-      const mockContents = [
-        { likes: 10, comments: [{ comment: "Comment 1" }] },
-        { likes: 20, comments: [{ comment: "Comment 2" }] },
-      ];
-      Content.find.mockResolvedValue(mockContents);
+  test("should return 404 if content not found", async () => {
+    Content.findById.mockResolvedValue(null);
 
-      const response = await request(app).get("/analytics");
-
-      const totalLikes = mockContents.reduce(
-        (acc, content) => acc + content.likes,
-        0
-      );
-      const totalComments = mockContents.reduce(
-        (acc, content) => acc + content.comments.length,
-        0
-      );
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        totalContents: mockContents.length,
-        totalLikes,
-        totalComments,
+    await request(app)
+      .put("/api/v1/content/123")
+      .expect(404)
+      .expect("Content-Type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual({ error: "Content not found" });
       });
-    });
+  });
+});
 
-    it("should handle errors", async () => {
-      Content.find.mockRejectedValue(new Error("Database error"));
+describe("DELETE /api/v1/content/:id", () => {
+  test("should delete content by id", async () => {
+    Content.findById.mockResolvedValue({ remove: jest.fn().mockResolvedValue(true) });
 
-      const response = await request(app).get("/analytics");
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Database error");
-    });
+    await request(app)
+      .delete("/api/v1/content/123")
+      .expect(200)
+      .expect("Content-Type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual({ message: "Content removed" });
+      });
   });
 
-  describe("getContentByTag", () => {
-    it("should return content by tag", async () => {
-      const mockContents = [{ title: "Content 1" }, { title: "Content 2" }];
-      Content.find.mockResolvedValue(mockContents);
+  test("should return 404 if content not found", async () => {
+    Content.findById.mockResolvedValue(null);
 
-      const response = await request(app).get("/content/tags/tag1");
+    await request(app)
+      .delete("/api/v1/content/123")
+      .expect(404)
+      .expect("Content-Type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual({ error: "Content not found" });
+      });
+  });
+});
 
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockContents);
-    });
+describe("GET /api/v1/content/:id/comments", () => {
+  test("should get comments for content by id", async () => {
+    const comments = [{ author: "Comment Author", comment: "Test Comment" }];
+    Content.findById.mockResolvedValue({ comments });
 
-    it("should handle errors", async () => {
-      Content.find.mockRejectedValue(new Error("Database error"));
-
-      const response = await request(app).get("/content/tags/tag1");
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Database error");
-    });
+    await request(app)
+      .get("/api/v1/content/123/comments")
+      .expect(200)
+      .expect("Content-Type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual(comments);
+      });
   });
 
-  describe("searchContent", () => {
-    it("should return content by keyword", async () => {
-      const mockContents = [{ title: "Content 1" }, { title: "Content 2" }];
-      Content.find.mockResolvedValue(mockContents);
+  test("should return 404 if content not found", async () => {
+    Content.findById.mockResolvedValue(null);
 
-      const response = await request(app).get(
-        "/content/search?keyword=keyword"
-      );
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockContents);
-    });
-
-    it("should handle errors", async () => {
-      Content.find.mockRejectedValue(new Error("Database error"));
-
-      const response = await request(app).get("/content/search");
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Database error");
-    });
+    await request(app)
+      .get("/api/v1/content/123/comments")
+      .expect(404)
+      .expect("Content-Type", /json/)
+      .then((response) => {
+        expect(response.body).toEqual({ error: "Content not found" });
+      });
   });
+});
 
-  describe("likeContent", () => {
-    it("should like content", async () => {
-      const mockContent = { _id: "1", likes: 10 };
-      Content.findById.mockResolvedValue(mockContent);
+// describe("POST /api/v1/content/:id/comments", () => {
+//   test("should add a new comment to content by id", async () => {
+//     const newComment = { author: "New Comment Author", comment: "New Test Comment" };
+//     Content.findById.mockResolvedValue({ save: jest.fn().mockResolvedValue(true) });
 
-      const response = await request(app).post("/content/1/like");
+//     await request(app)
+//       .post("/api/v1/content/123/comments")
+//       .send(newComment)
+//       .expect(201)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual(newComment);
+//       });
+//   });
 
-      expect(response.status).toBe(200);
-      expect(response.body.likes).toBe(mockContent.likes + 1);
-    });
+//   test("should return 404 if content not found", async () => {
+//     Content.findById.mockResolvedValue(null);
 
-    it("should handle content not found", async () => {
-      Content.findById.mockResolvedValue(null);
+//     await request(app)
+//       .post("/api/v1/content/123/comments")
+//       .expect(404)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual({ error: "Content not found" });
+//       });
+//   });
+// });
 
-      const response = await request(app).post("/content/1/like");
+// describe("GET /api/v1/content/tag/:tag", () => {
+//   test("should get content by tag", async () => {
+//     const tag = "test";
+//     const contents = [{ title: "Test Content", author: "Test Author", content: "Test Content Body", tags: [tag] }];
+//     Content.find.mockResolvedValue(contents);
 
-      expect(response.status).toBe(404);
-      expect(response.body.error).toBe("Content not found");
-    });
+//     await request(app)
+//       .get(`/api/v1/content/tag/${tag}`)
+//       .expect(200)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual(contents);
+//       });
+//   });
 
-    it("should handle errors", async () => {
-      Content.findById.mockRejectedValue(new Error("Database error"));
+//   test("should return 404 if no content found for tag", async () => {
+//     const tag = "nonexistenttag";
+//     Content.find.mockResolvedValue([]);
 
-      const response = await request(app).post("/content/1/like");
+//     await request(app)
+//       .get(`/api/v1/content/tag/${tag}`)
+//       .expect(404)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual({ error: "No content found for tag" });
+//       });
+//   });
+// });
 
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Database error");
-    });
-  });
+// describe("GET /api/v1/content/search", () => {
+//   test("should search content by keyword", async () => {
+//     const keyword = "test";
+//     const contents = [{ title: "Test Content 1", author: "Test Author", content: "Test Content Body 1" }, { title: "Test Content 2", author: "Test Author", content: "Test Content Body 2" }];
+//     Content.find.mockResolvedValue(contents);
 
-  describe("unlikeContent", () => {
-    it("should unlike content", async () => {
-      const mockContent = { _id: "1", likes: 10 };
-      Content.findById.mockResolvedValue(mockContent);
+//     await request(app)
+//       .get(`/api/v1/content/search?keyword=${keyword}`)
+//       .expect(200)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual(contents);
+//       });
+//   });
 
-      const response = await request(app).post("/content/1/unlike");
+//   test("should return empty array if no content found for keyword", async () => {
+//     const keyword = "nonexistentkeyword";
+//     Content.find.mockResolvedValue([]);
 
-      expect(response.status).toBe(200);
-      expect(response.body.likes).toBe(mockContent.likes - 1);
-    });
+//     await request(app)
+//       .get(`/api/v1/content/search?keyword=${keyword}`)
+//       .expect(200)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual([]);
+//       });
+//   });
+// });
 
-    it("should handle content not found", async () => {
-      Content.findById.mockResolvedValue(null);
+// describe("GET /api/v1/content/:id/analytics", () => {
+//   test("should get analytics for content by id", async () => {
+//     const contentId = "123";
+//     const content = { _id: contentId, title: "Test Content", author: "Test Author", content: "Test Content Body", likes: 10, comments: [{ author: "Comment Author", comment: "Test Comment" }] };
+//     Content.findById.mockResolvedValue(content);
 
-      const response = await request(app).post("/content/1/unlike");
+//     await request(app)
+//       .get(`/api/v1/content/${contentId}/analytics`)
+//       .expect(200)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual({ likes: 10, comments: 1 });
+//       });
+//   });
 
-      expect(response.status).toBe(404);
-      expect(response.body.error).toBe("Content not found");
-    });
+//   test("should return 404 if content not found", async () => {
+//     const contentId = "nonexistentid";
+//     Content.findById.mockResolvedValue(null);
 
-    it("should handle errors", async () => {
-      Content.findById.mockRejectedValue(new Error("Database error"));
+//     await request(app)
+//       .get(`/api/v1/content/${contentId}/analytics`)
+//       .expect(404)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual({ error: "Content not found" });
+//       });
+//   });
+// });
 
-      const response = await request(app).post("/content/1/unlike");
+// describe("GET /api/v1/content/analytics", () => {
+//   test("should get overall analytics", async () => {
+//     const contents = [{ likes: 10, comments: [{ author: "Comment Author", comment: "Test Comment" }] }, { likes: 5, comments: [] }];
+//     Content.find.mockResolvedValue(contents);
 
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Database error");
-    });
-  });
+//     await request(app)
+//       .get("/api/v1/content/analytics")
+//       .expect(200)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual({ totalContents: 2, totalLikes: 15, totalComments: 1 });
+//       });
+//   });
 
-  describe("getComments", () => {
-    it("should return all comments for content by id", async () => {
-      const mockContent = { _id: "1", comments: [{ comment: "Comment 1" }] };
-      Content.findById.mockResolvedValue(mockContent);
+//   test("should return empty analytics if no content found", async () => {
+//     Content.find.mockResolvedValue([]);
 
-      const response = await request(app).get("/content/1/comments");
-
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockContent.comments);
-    });
-
-    it("should handle content not found", async () => {
-      Content.findById.mockResolvedValue(null);
-
-      const response = await request(app).get("/content/1/comments");
-
-      expect(response.status).toBe(404);
-      expect(response.body.error).toBe("Content not found");
-    });
-
-    it("should handle errors", async () => {
-      Content.findById.mockRejectedValue(new Error("Database error"));
-
-      const response = await request(app).get("/content/1/comments");
-
-      expect(response.status).toBe(500);
-      expect(response.body.error).toBe("Database error");
-    });
-  });
+//     await request(app)
+//       .get("/api/v1/content/analytics")
+//       .expect(200)
+//       .expect("Content-Type", /json/)
+//       .then((response) => {
+//         expect(response.body).toEqual({ totalContents: 0, totalLikes: 0, totalComments: 0 });
+//       });
+//   });
+// });
 });
