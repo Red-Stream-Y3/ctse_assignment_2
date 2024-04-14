@@ -14,7 +14,7 @@
                     "appProtocol": "http"
                 }
             ],
-            "secerts" : [
+            "secrets" : [
                 {
                     "name": "PORT", 
                     "valueFrom": "arn:aws:ssm:us-east-1:654654619629:parameter/CTSE-PORT"
