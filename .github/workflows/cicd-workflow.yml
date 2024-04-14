@@ -2,7 +2,7 @@ name: AWS ECS Deployment CI/CD
 
 on:
   push:
-    branches: [dev]
+    branches: [prod]
 
 jobs:
   build-and-deploy:
