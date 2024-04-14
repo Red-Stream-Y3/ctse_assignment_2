@@ -10,7 +10,7 @@ import categoryRoutes from './src/routes/categoryRoutes.js';
 // import { notFound, errorHandler } from "./src/middleware/errorMiddleware.js";
 
 if (process.env.NODE_ENV !== 'production') {
-    dotenv.config({ path: findConfig('.env.dev') });
+    dotenv.config({ path: findConfig('.env') });
 }
 
 connectDB();
