@@ -21,7 +21,10 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run Tests
+      - name: Set up environment variables
+        run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV
+
+      - name: 'Node.js Tests'
         run: yarn test
 
       - name: Check Test Status
