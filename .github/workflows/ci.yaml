@@ -1,21 +1,25 @@
 name: CI
 
 on:
-    pull_request:
-      branches: ["dev"]
-      types: [opened, synchronize, reopened]
+  pull_request:
+    branches: 
+      - dev
+    types: 
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   test:
-    name: 'Node.js Tests'
+    name: Run Yarn Test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-       working-directory: ./app
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: Install Dependencies
-        run: yarn install
-      - name: Run All Node.js Tests
+        run: yarn install --frozen-lockfile
+
+      - name: Run Tests
         run: yarn test
