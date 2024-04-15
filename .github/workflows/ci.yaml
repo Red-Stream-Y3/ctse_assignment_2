@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+    branches: 
+      - dev
+    types: 
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  test:
+    name: Run Yarn Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Set up environment variables
+        run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV
+
+      - name: 'Node.js Tests'
+        run: yarn test
+
+      - name: Check Test Status
+        run: |
+          if [ ${{ job.status }} != 'success' ]; then
+            echo "Tests failed. Blocking merge..."
+            exit 1
+          fi
