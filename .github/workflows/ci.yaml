@@ -23,3 +23,10 @@ jobs:
 
       - name: Run Tests
         run: yarn test
+
+      - name: Check Test Status
+        run: |
+          if [ ${{ job.status }} != 'success' ]; then
+            echo "Tests failed. Blocking merge..."
+            exit 1
+          fi
